@@ -85,8 +85,8 @@
 <meta property="og:url" content="http://yoursite.com/2020/02/23/hello-world/index.html">
 <meta property="og:site_name" content="論文閱讀筆記">
 <meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="article:published_time" content="2020-02-23T03:44:36.067Z">
-<meta property="article:modified_time" content="2020-02-24T06:26:53.542Z">
+<meta property="article:published_time" content="2020-02-23T12:46:25.000Z">
+<meta property="article:modified_time" content="2020-02-25T12:46:25.000Z">
 <meta property="article:author" content="Vincent Wu">
 <meta property="article:tag" content="Test_tag">
 <meta name="twitter:card" content="summary">
@@ -273,6 +273,12 @@
         
 
         <div class="post-meta">
+          
+            <i class="fa fa-thumb-tack"></i>
+            <font color="RED">置顶</font>
+            <span class="post-meta-divider">|</span>
+          
+
           <span class="post-time">
             
               <span class="post-meta-item-icon">
@@ -281,13 +287,25 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-02-23T11:44:36+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-02-23T20:46:25+08:00">
                 2020-02-23
               </time>
             
 
             
+              <span class="post-meta-divider">|</span>
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-02-25T20:46:25+08:00">
+                2020-02-25
+              </time>
             
           </span>
 
@@ -316,6 +334,17 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/02/23/hello-world/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/02/23/hello-world/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -367,6 +396,24 @@
     
 
     
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:</strong>
+    Vincent Wu
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link:</strong>
+    <a href="http://yoursite.com/2020/02/23/hello-world/" title="Hello World">http://yoursite.com/2020/02/23/hello-world/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice: </strong>
+    All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+  </li>
+</ul>
+
+      </div>
+    
 
     <footer class="post-footer">
       
@@ -405,6 +452,16 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
 
   
 
@@ -556,7 +613,45 @@
 
 
 
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
 
 
 
@@ -683,6 +778,26 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://vincentwu.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2020/02/23/hello-world/';
+          this.page.identifier = '2020/02/23/hello-world/';
+          this.page.title = 'Hello World';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://vincentwu.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -695,10 +810,6 @@
   
 
 
-
-
-
-  
 
 
 
