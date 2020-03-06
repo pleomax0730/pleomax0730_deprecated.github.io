@@ -83,12 +83,12 @@
 
 
 
-<meta name="description" content="1 Introduction">
+<meta name="description" content="Abstract問題描述Natural language understanding comprises a wide range of diverse tasks such as textual entailment, question answering, semantic similarity assessment, and document classification. Although">
 <meta property="og:type" content="article">
 <meta property="og:title" content="論文閱讀筆記 GPT：Improving Language Understanding by Generative Pre-Training">
 <meta property="og:url" content="http://pleomax0730.github.io/2020/02/26/GPT/index.html">
 <meta property="og:site_name" content="論文閱讀筆記">
-<meta property="og:description" content="1 Introduction">
+<meta property="og:description" content="Abstract問題描述Natural language understanding comprises a wide range of diverse tasks such as textual entailment, question answering, semantic similarity assessment, and document classification. Although">
 <meta property="article:published_time" content="2020-02-25T16:32:40.000Z">
 <meta property="article:modified_time" content="2020-02-26T16:32:40.000Z">
 <meta property="article:author" content="Vincent Wu">
@@ -359,7 +359,34 @@
       
 
       
-        <h2 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h2>
+        <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><h3 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h3><p>Natural language understanding comprises a wide range of diverse tasks such as textual entailment, question answering, semantic similarity assessment, and document classification.</p>
+<p>Although large unlabeled text corpora are abundant, labeled data for learning these specific tasks is scarce, making it challenging for discriminatively trained models to perform adequately.<br><a id="more"></a></p>
+<h3 id="解決方法概述"><a href="#解決方法概述" class="headerlink" title="解決方法概述"></a>解決方法概述</h3><p>Large gains on these tasks can be realized by <strong><em>generative pre-training</em></strong> of a language model on a diverse corpus of unlabeled text, followed by <strong><em>discriminative fine-tuning</em></strong> on each specific task.</p>
+<p>In contrast to previous approaches, we make use of <strong>task-aware input transformations during fine-tuning</strong> to achieve effective transfer while requiring minimal changes to the model architecture.</p>
+<h3 id="SOTA"><a href="#SOTA" class="headerlink" title="SOTA"></a>SOTA</h3><p>We demonstrate the effectiveness of our approach on a wide range of benchmarks for natural language understanding.</p>
+<p>For instance, we achieve absolute improvements of 8.9% on commonsense reasoning (Stories Cloze Test), 5.7% on question answering (RACE), and 1.5% on textual entailment (MultiNLI).</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="NLP-tasks-問題描述"><a href="#NLP-tasks-問題描述" class="headerlink" title="NLP tasks 問題描述"></a>NLP tasks 問題描述</h3><p>Most deep learning methods require substantial amounts of manually labeled data, which restricts their applicability in many domains that suffer from a dearth of annotated resources.</p>
+<p>In these situations, models that can leverage linguistic information from unlabeled data provide a valuable alternative to gathering more annotation, which can be time-consuming and expensive.</p>
+<p>Further, even in cases where considerable supervision is available, learning good representations in an unsupervised fashion can provide a significant performance boost. The most compelling evidence for this so far has been the extensive use of pretrained word embeddings to improve performance on a range of NLP tasks.</p>
+<h3 id="難以取得優於-word-level-information-的兩個主要原因"><a href="#難以取得優於-word-level-information-的兩個主要原因" class="headerlink" title="難以取得優於 word-level information 的兩個主要原因"></a>難以取得優於 word-level information 的兩個主要原因</h3><ul>
+<li><p>First, it is <strong>unclear what type of optimization objectives are most effective at learning text representations that are useful for transfer</strong>. Recent research has looked at various objectives such as language modeling, machine translation, and discourse coherence, with each method outperforming the others on different tasks.</p>
+</li>
+<li><p>Second, there is <strong>no consensus on the most effective way to transfer these learned representations to the target task</strong>. Existing techniques involve a combination of making task-specific changes to the model architecture, <strong>using intricate learning schemes and adding auxiliary learning objectives</strong>.</p>
+</li>
+</ul>
+<p>These uncertainties have made it difficult to develop effective semi-supervised learning approaches for language processing.</p>
+<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h3><p>We explore a <strong>semi-supervised approach</strong> for language understanding tasks <strong>using a combination of unsupervised pre-training and supervised fine-tuning</strong>.</p>
+<p>Our goal is to <strong>learn a universal representation</strong> that transfers with little adaptation to a wide range of tasks.</p>
+<p>We <strong>assume</strong> access to a large corpus of <strong>unlabeled</strong> text and <strong>several datasets with manually annotated</strong> training examples (target tasks). Our setup does not require these target tasks to be in the same domain as the unlabeled corpus.</p>
+<h3 id="Two-stage-training-procedure"><a href="#Two-stage-training-procedure" class="headerlink" title="Two-stage training procedure"></a>Two-stage training procedure</h3><ul>
+<li>First, we use a <strong><em>language modeling objective</em></strong> on the <strong>unlabeled data</strong> to learn the initial parameters of a neural network model.</li>
+<li>Subsequently, we <strong>adapt</strong> these parameters to a target task using the <strong>corresponding supervised objective</strong>.</li>
+</ul>
+<h3 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h3><p>We use the <strong>Transformer</strong>, which has been shown to perform strongly on various tasks such as machine translation, document generation, and syntactic parsing.</p>
+<p>This model choice provides us with a more structured memory for <strong>handling long-term dependencies in text</strong>, compared to alternatives like recurrent networks, resulting in robust transfer performance across diverse tasks.</p>
+<p>During transfer, we utilize <strong>task-specific input adaptations</strong> derived from <strong>traversal-style approaches</strong>, which <strong>process structured text input as a single contiguous sequence of tokens</strong>. As we demonstrate in our experiments, these adaptations enable us to <strong>fine-tune effectively with minimal changes to the architecture</strong> of the pre-trained model.</p>
+<h3 id="More-on-SOTA"><a href="#More-on-SOTA" class="headerlink" title="More on SOTA"></a>More on SOTA</h3><p>We achieve absolute improvements of 8.9% on commonsense reasoning (Stories Cloze Test), 5.7% on question answering (RACE), 1.5% on textual entailment (MultiNLI) and 5.5% on the recently introduced GLUE multi-task benchmark. We also analyzed zero-shot behaviors of the pre-trained model on four different settings and demonstrate that it acquires useful linguistic knowledge for downstream tasks.</p>
+
       
     </div>
     
@@ -565,7 +592,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Introduction"><span class="nav-number">1.</span> <span class="nav-text">1 Introduction</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題描述"><span class="nav-number">1.1.</span> <span class="nav-text">問題描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解決方法概述"><span class="nav-number">1.2.</span> <span class="nav-text">解決方法概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SOTA"><span class="nav-number">1.3.</span> <span class="nav-text">SOTA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NLP-tasks-問題描述"><span class="nav-number">2.1.</span> <span class="nav-text">NLP tasks 問題描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#難以取得優於-word-level-information-的兩個主要原因"><span class="nav-number">2.2.</span> <span class="nav-text">難以取得優於 word-level information 的兩個主要原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Solution"><span class="nav-number">2.3.</span> <span class="nav-text">Solution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Two-stage-training-procedure"><span class="nav-number">2.4.</span> <span class="nav-text">Two-stage training procedure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Architecture"><span class="nav-number">2.5.</span> <span class="nav-text">Model Architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#More-on-SOTA"><span class="nav-number">2.6.</span> <span class="nav-text">More on SOTA</span></a></li></ol></li></ol></div>
             
 
           </div>
