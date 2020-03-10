@@ -364,78 +364,16 @@
 
       
         
-          
-            <h2 id="Paper"><a href="#Paper" class="headerlink" title="Paper"></a>Paper</h2><p><a href="https://arxiv.org/abs/1901.07291v1" target="_blank" rel="noopener">https://arxiv.org/abs/1901.07291v1</a></p>
+          <h2 id="Paper"><a href="#Paper" class="headerlink" title="Paper"></a>Paper</h2><p><a href="https://arxiv.org/abs/1901.07291v1" target="_blank" rel="noopener">https://arxiv.org/abs/1901.07291v1</a></p>
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><h3 id="主旨"><a href="#主旨" class="headerlink" title="主旨"></a>主旨</h3><p>Recent studies have demonstrated the efficiency of generative pretraining for <strong><em>English</em></strong> natural language understanding.</p>
-<p>In this work, we extend this approach to <strong>multiple languages</strong> and show the effectiveness of <strong>cross-lingual pretraining</strong>.</p>
-<h3 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h3><p>We propose <strong>two methods to learn cross-lingual language models (XLMs)</strong>:</p>
-<ul>
-<li><strong>Unsupervised</strong> that only relies on <strong>monolingual data</strong></li>
-<li><strong>Supervised</strong> that leverages parallel data with a <strong>new cross-lingual language model objective</strong>.</li>
-</ul>
-<h3 id="SOTA"><a href="#SOTA" class="headerlink" title="SOTA"></a>SOTA</h3><ul>
-<li><p><strong>XNLI</strong><br>Our approach pushes the state of the art by an absolute gain of 4.9% accuracy.</p>
-</li>
-<li><p><strong>Unsupervised machine translation</strong><br>We obtain 34.3 BLEU on WMT’16 German-English, improving the previous state of the art by more than 9 BLEU.</p>
-</li>
-<li><p><strong>Supervised machine translation</strong><br>We obtain a new state of the art of 38.5 BLEU on WMT’16 Romanian-English, outperforming the previous best approach by more than 4 BLEU.</p>
-</li>
-</ul>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><h3 id="問題及現況描述"><a href="#問題及現況描述" class="headerlink" title="問題及現況描述"></a>問題及現況描述</h3><p>Although there has been a surge of interest in learning general-purpose sentence representations, research in that area has been essentially <strong>monolingual</strong>, and largely focused around English benchmarks (Conneau and Kiela, 2018; Wang et al., 2018).</p>
-<p>Recent developments in learning and evaluating cross-lingual sentence representations in many languages (Conneau et al., 2018b) aim at <strong>mitigating the English-centric bias</strong> and suggest that it is possible to <strong>build universal cross-lingual encoders</strong> that can <strong>encode any sentence into a shared embedding space</strong>.</p>
-<h3 id="貢獻"><a href="#貢獻" class="headerlink" title="貢獻"></a>貢獻</h3><p>In this work, we demonstrate the effectiveness of cross-lingual language model pretraining on multiple cross-lingual understanding (XLU) benchmarks.</p>
-<p>Precisely, we make the following contributions:</p>
-<ol>
-<li><p>We introduce a new <strong>unsupervised</strong> method for <strong>learning cross-lingual representations</strong> using <strong>cross-lingual language modeling</strong> and investigate <strong>two monolingual pretraining objectives</strong>.</p>
-</li>
-<li><p>We introduce <strong>a new supervised learning objective</strong> that <strong>improves cross-lingual pretraining</strong> when parallel data is available.</p>
-</li>
-<li><p>We significantly outperform the previous state of the art on cross-lingual classification, unsupervised machine translation and supervised machine translation.</p>
-</li>
-<li><p>We show that cross-lingual language models can provide <strong>significant improvements on the perplexity of low-resource languages</strong>.</p>
-</li>
-<li><p>We will make our code and pretrained models publicly available.</p>
-</li>
-</ol>
-<h2 id="XLMs-Cross-lingual-language-models"><a href="#XLMs-Cross-lingual-language-models" class="headerlink" title="XLMs: Cross-lingual language models"></a>XLMs: Cross-lingual language models</h2><p>In this section, we present the three language modeling objectives we consider throughout this work.</p>
-<p><strong>Two of them only require monolingual data (unsupervised)</strong>, while <strong>the third one requires parallel sentences (supervised)</strong>.</p>
-<p>We consider $N$ languages. Unless stated otherwise, we suppose that we have $N$ monolingual corpora $\left\{C_{i}\right\}_{i=1 \ldots N},$ and we denote by $n_{i}$ the number of sentences in $C_{i}$</p>
-<h3 id="Shared-sub-word-vocabulary"><a href="#Shared-sub-word-vocabulary" class="headerlink" title="Shared sub-word vocabulary"></a>Shared sub-word vocabulary</h3><p>In all our experiments we process all languages with <strong>the same shared vocabulary</strong> created through <strong>Byte Pair Encoding (BPE) (Sennrich et al., 2015)</strong>.</p>
-<p>As shown in Lample et al. (2018a), this greatly improves the alignment of embedding spaces across languages that share either the same alphabet or anchor tokens such as digits (Smith et al., 2017) or proper nouns.</p>
-<p>We <strong>learn the BPE splits on the concatenation of sentences sampled randomly from the monolingual corpora</strong>. Sentences are sampled according to a <strong>multinomial distribution</strong> with probabilities $\left\{q_{i}\right\}_{i=1 \ldots N},$ where:</p>
-<p>$$<br>q_{i}=\frac{p_{i}^{\alpha}}{\sum_{j=1}^{N} p_{j}^{\alpha}} \text { with } p_{i}=\frac{n_{i}}{\sum_{k=1}^{N} n_{k}}</p>
-<p>$$ We consider $\alpha=0.5 $</p>
-<p>Sampling with <strong>this distribution increases the number of tokens associated to low-resource languages</strong> and <strong>alleviates the bias towards high-resource languages</strong>.</p>
-<p>In particular, this <strong>prevents words of low-resource languages from being split at the character level</strong>.</p>
-<h3 id="Causal-Language-Modeling-CLM"><a href="#Causal-Language-Modeling-CLM" class="headerlink" title="Causal Language Modeling (CLM)"></a>Causal Language Modeling (CLM)</h3><p>Our <strong>causal language modeling (CLM) task</strong> consists of <strong>a Transformer language model trained to model the probability of a word given the previous words in a sentence</strong> $P\left(w_{t} | w_{1}, \ldots, w_{t-1}, \theta\right)$</p>
-<p>While recurrent neural networks obtain state-of-the-art performance on language modeling benchmarks (Mikolov et al., 2010 ; Jozefowicz et al., 2016 ), Transformer models are also very competitive (Dai et al., 2019 ).</p>
-<p>In the case of LSTM language models, backpropagation through time (Werbos, 1990 ) (BPTT) is performed by providing the LSTM with the last hidden state of the previous iteration. In the case of Transformers, previous hidden states can be passed to the current batch (Al-Rfou et al., 2018 ) to provide context to the first words in the batch. However, <strong>this technique does not scale to the cross-lingual setting</strong>, so we just leave the first words in each batch without context for simplicity.</p>
-<h3 id="Masked-Language-Modeling-MLM"><a href="#Masked-Language-Modeling-MLM" class="headerlink" title="　Masked Language Modeling (MLM)"></a>　Masked Language Modeling (MLM)</h3><p>We also consider the <strong>masked language modeling (MLM) objective</strong> of Devlin et al. (2018), also known as the Cloze task (Taylor, 1953).</p>
-<p>Following Devlin et al. (2018), we <strong>sample randomly 15% of the BPE tokens from the text streams</strong>, replace them by a <strong>[MASK] token 80% of the time</strong>, by a <strong>random token 10% of the time</strong>, and we keep them <strong>unchanged 10% of the time</strong>.</p>
-<p>Differences between our approach and the MLM of Devlin et al. (2018) include the <strong>use of text streams of an arbitrary number of sentences (truncated at 256 tokens)</strong> instead of <strong>pairs of sentences</strong>.</p>
-<p>To counter the imbalance between rare and frequent tokens (e.g. punctuations or stop words), we also subsample the frequent outputs using an approach similar to Mikolov et al. (2013b)：</p>
-<ul>
-<li>Tokens in a text stream are sampled according to a <strong>multinomial distribution</strong>, whose weights are <strong>proportional to the square root of their invert frequencies</strong>.</li>
-</ul>
-<p>Our MLM objective is illustrated in Figure 1.</p>
-<p><img src="https://imgur.com/uDVbqlL.jpg" alt="Fig 1."></p>
-<h3 id="Translation-Language-Modeling-TLM"><a href="#Translation-Language-Modeling-TLM" class="headerlink" title="Translation Language Modeling (TLM)"></a>Translation Language Modeling (TLM)</h3><p>Both the <strong>CLM and MLM objectives are unsupervised</strong> and <strong>only require monolingual data</strong>. However, <strong>these objectives cannot be used to leverage parallel data</strong> when it is available.</p>
-<p>We introduce a new <strong>translation language modeling (TLM) objective for improving cross-lingual pretraining</strong>.</p>
-<p>Our TLM objective is an extension of MLM, where instead of considering monolingual text streams, we <strong>concatenate parallel sentences</strong> as illustrated in Figure 1.</p>
-<p>We <strong>randomly mask words in both the source and target sentences</strong>. To predict a word masked in an English sentence, the model can either attend to surrounding English words or to the French translation, encouraging the model to align the English and French representations.</p>
-<p>In particular, the model can leverage the French context if the English one is not sufficient to infer the masked English words. <strong>To facilitate the alignment, we also reset the positions of target sentences</strong>.</p>
-<h3 id="Cross-lingual-Language-Models"><a href="#Cross-lingual-Language-Models" class="headerlink" title="Cross-lingual Language Models"></a>Cross-lingual Language Models</h3><p>In this work, we consider cross-lingual language model pretraining with either CLM, MLM, or MLM used in combination with TLM.</p>
-<p>For the <strong>CLM and MLM objectives</strong>, we train the model with batches of 64 streams of continuous sentences composed of <strong>256 tokens</strong>. At each iteration, a batch is composed of sentences coming from the same language, which is sampled from the distribution $\left\{q_{i}\right\}_{i=1 \ldots N}$ above, with $\alpha=0.7 .$</p>
-<p>When TLM is used in combination with MLM, we alternate between these two objectives, and sample the language pairs with a similar approach.</p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>We investigate two unsupervised training objectives that require only monolingual corpora: Causal Language Modeling (CLM) and Masked Language Modeling (MLM). We show that both the CLM and MLM approaches provide strong cross-lingual features that can be used for pretraining models.</p>
-<p><strong>Without using a single parallel sentence</strong>, a cross-lingual language model <strong>fine-tuned on the XNLI cross-lingual classification benchmark already outperforms the previous supervised state of the art by 1.3% accuracy on average</strong>.</p>
-<p>A key contribution of our work is</p>
-<ul>
-<li>The translation language modeling (TLM) objective which improves crosslingual language model pretraining by leveraging parallel data. TLM naturally extends the BERT MLM approach by using batches of parallel sentences instead of consecutive sentences.</li>
-<li>We obtain a significant gain by using TLM in addition to MLM, and we show that this supervised approach beats the previous state of the art on XNLI by 4.9% accuracy on average.</li>
-</ul>
-
-          
+<p>In this work, we extend this approach to <strong>multiple languages</strong> and show the effectiveness of <strong>cross-lingual pretraining</strong>.<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/09/xlms/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
