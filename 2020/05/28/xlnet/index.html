@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="XLNET," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Paperhttps:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1906.08237v2 AuthorsZhilin Yang, Zihang Dai, Yiming Yang, Jaime Carbonell, Ruslan Salakhutdinov, Quoc V. Le AbstractBERT 優點With the capability of modeling bidirectional cont">
+<meta property="og:type" content="article">
+<meta property="og:title" content="論文閱讀筆記 XLNet： Generalized Autoregressive Pretraining for Language Understanding">
+<meta property="og:url" content="http://pleomax0730.github.io/2020/05/28/xlnet/index.html">
+<meta property="og:site_name" content="論文閱讀筆記">
+<meta property="og:description" content="Paperhttps:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1906.08237v2 AuthorsZhilin Yang, Zihang Dai, Yiming Yang, Jaime Carbonell, Ruslan Salakhutdinov, Quoc V. Le AbstractBERT 優點With the capability of modeling bidirectional cont">
+<meta property="og:image" content="https://i.imgur.com/X3EOhew.jpg">
+<meta property="og:image" content="https://i.imgur.com/Fbn5v2s.jpg">
+<meta property="og:image" content="https://i.imgur.com/qJk2mpP.jpg">
+<meta property="og:image" content="https://i.imgur.com/hhNGUMm.jpg">
+<meta property="og:image" content="https://i.imgur.com/BywMHTQ.jpg">
+<meta property="og:image" content="https://i.imgur.com/u0N5OKj.jpg">
+<meta property="og:image" content="https://i.imgur.com/UVO8CaU.jpg">
+<meta property="og:image" content="https://i.imgur.com/mcL9BmX.jpg">
+<meta property="article:published_time" content="2020-05-28T06:58:14.000Z">
+<meta property="article:modified_time" content="2020-05-28T06:58:14.000Z">
+<meta property="article:author" content="Vincent Wu">
+<meta property="article:tag" content="XLNET">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/X3EOhew.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pleomax0730.github.io/2020/05/28/xlnet/"/>
+
+
+
+
+
+  <title>論文閱讀筆記 XLNet： Generalized Autoregressive Pretraining for Language Understanding | 論文閱讀筆記</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">論文閱讀筆記</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pleomax0730.github.io/2020/05/28/xlnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Wu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.imgur.com/NJyO9ky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="論文閱讀筆記">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">論文閱讀筆記 XLNet： Generalized Autoregressive Pretraining for Language Understanding</h1>
+        
+
+        <div class="post-meta">
+          
+            <i class="fa fa-thumb-tack"></i>
+            <font color="RED">置顶</font>
+            <span class="post-meta-divider">|</span>
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-28T14:58:14+08:00">
+                2020-05-28
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-05-28T14:58:14+08:00">
+                2020-05-28
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computation-and-Language/" itemprop="url" rel="index">
+                    <span itemprop="name">Computation and Language</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Paper"><a href="#Paper" class="headerlink" title="Paper"></a>Paper</h2><p><a href="https://arxiv.org/abs/1906.08237v2" target="_blank" rel="noopener">https://arxiv.org/abs/1906.08237v2</a></p>
+<h2 id="Authors"><a href="#Authors" class="headerlink" title="Authors"></a>Authors</h2><p>Zhilin Yang, Zihang Dai, Yiming Yang, Jaime Carbonell, Ruslan Salakhutdinov, Quoc V. Le</p>
+<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><h4 id="BERT-優點"><a href="#BERT-優點" class="headerlink" title="BERT 優點"></a>BERT 優點</h4><p><strong>With the capability of modeling bidirectional contexts</strong>, denoising autoencoding based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive language modeling.</p>
+<h4 id="BERT-缺點"><a href="#BERT-缺點" class="headerlink" title="BERT 缺點"></a>BERT 缺點</h4><p>However, relying on corrupting the input with masks, <strong>BERT neglects dependency between the masked positions and suffers from a pretrain-finetune discrepancy</strong>.</p>
+<h4 id="Solution-簡述"><a href="#Solution-簡述" class="headerlink" title="Solution 簡述"></a>Solution 簡述</h4><p><strong>XLNet</strong>, a generalized <strong>autoregressive pretraining method</strong> that</p>
+<ul>
+<li><p>Enable learning bidirectional contexts by <strong>maximizing the expected likelihood over all permutations of the factorization order</strong></p>
+</li>
+<li><p>Overcome the limitations of BERT thanks to its <strong>autoregressive formulation</strong></p>
+</li>
+<li><p><strong>Integrate ideas from Transformer-XL</strong>, the state-of-the-art autoregressive model, into pretraining</p>
+</li>
+</ul>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>Unsupervised representation learning methods <strong>first pretrain neural networks on large-scale unlabeled text corpora</strong>, and <strong>then finetune the models or representations on downstream tasks</strong>.</p>
+<p>Under this shared high-level idea, different unsupervised pretraining objectives have been explored in literature. Among them, <strong>autoregressive (AR) language modeling and autoencoding (AE)</strong> have been the two most successful pretraining objectives.</p>
+<h4 id="AR-和-AE-模型的區別"><a href="#AR-和-AE-模型的區別" class="headerlink" title="AR 和 AE 模型的區別"></a>AR 和 AE 模型的區別</h4><p>AR language modeling seeks to estimate the probability distribution of a text corpus with an autoregressive model. Specifically, <strong>given a text sequence $\mathbf{x}=\left(x_{1}, \cdots, x_{T}\right),$ AR language modeling factorizes the likelihood into a forward product $p(\mathbf{x})=\prod_{t=1}^{T} p\left(x_{t} | \mathbf{x}_{<t}\right)$ or a backward one $p(\mathbf{x})=\prod_{t=T}^{1} p\left(x_{t} | \mathbf{x}_{>t}\right) .$</strong></p>
+<p><strong>Since an AR language model is only trained to encode a uni-directional context (either forward or backward), it is not effective at modeling deep bidirectional contexts</strong>. On the contrary, downstream language understanding tasks often require bidirectional context information. This results in a gap between AR language modeling and effective pretraining.</p>
+<p>In comparison, <strong>AE based pretraining does not perform explicit density estimation but instead aims to reconstruct the original data from corrupted input</strong>. A notable example is <strong>BERT</strong>, which has been the state-of-the-art pretraining approach. Given the input token sequence, a certain portion of tokens are replaced by a special symbol [MASK], and <strong>the model is trained to recover the original tokens from the corrupted version</strong>. Since density estimation is not part of the objective, BERT is allowed to utilize bidirectional contexts for reconstruction.</p>
+<h4 id="BERT-問題"><a href="#BERT-問題" class="headerlink" title="BERT 問題"></a>BERT 問題</h4><p>However, the artificial symbols like <strong>[MASK]</strong> used by BERT during pretraining are <strong>absent from real data at finetuning time</strong>, resulting in a pretrain-finetune discrepancy. Moreover, since the predicted tokens are masked in the input, <strong>BERT is not able to model the joint probability using the product rule as in AR language modeling</strong>. In other words, <strong>BERT assumes the predicted tokens are independent of each other given the unmasked tokens</strong>, which is oversimplified as high-order, long-range dependency is prevalent in natural language.</p>
+<h4 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h4><p>XLNet, a generalized autoregressive method that leverages the best of both AR language modeling and AE while avoiding their limitations.</p>
+<ol>
+<li><p><strong>Instead of using a fixed forward or backward factorization order as in conventional AR models, XLNet maximizes the expected log likelihood of a sequence w.r.t. all possible permutations of the factorization order</strong>. Thanks to the permutation operation, the context for each position can consist of tokens from both left and right. In expectation, each position learns to utilize contextual information from all positions, i.e., <strong>capturing bidirectional context</strong>.</p>
+</li>
+<li><p>As a generalized AR language model, <strong>XLNet does not rely on data corruption</strong>. Hence, <strong>XLNet does not suffer from the pretrain-finetune discrepancy that BERT is subject to</strong>. Meanwhile, <strong>the autoregressive objective also provides a natural way to use the product rule for factorizing the joint probability of the predicted tokens, eliminating the independence assumption made in BERT</strong>.</p>
+</li>
+<li><p><strong>XLNet integrates the segment recurrence mechanism and relative encoding scheme of Transformer-XL into pretraining</strong>, which empirically improves the performance especially for tasks involving a <strong>longer text sequence</strong>.</p>
+</li>
+<li><p><strong>Naively applying a Transformer(-XL) architecture to permutation-based language modeling does not work because the factorization order is arbitrary and the target is ambiguous</strong>. As a solution, we propose to <strong>reparameterize the Transformer(-XL) network to remove the ambiguity</strong>.</p>
+</li>
+</ol>
+<h3 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h3><h4 id="Objectiv：-Permutation-Language-Modeling"><a href="#Objectiv：-Permutation-Language-Modeling" class="headerlink" title="Objectiv： Permutation Language Modeling"></a>Objectiv： Permutation Language Modeling</h4><p>AR language modeling and BERT possess their unique advantages over the other. A natural question to ask is whether there exists a pretraining objective that brings the advantages of both while avoiding their weaknesses.</p>
+<p>Borrowing ideas from <strong>orderless NADE [32]</strong>, we propose the <strong>permutation language modeling objective that not only retains the benefits of AR models but also allows models to capture bidirectional contexts</strong>.</p>
+<p>Specifically, for a sequence $\mathbf{x}$ of length $T,$ there are $T !$ different orders to perform a valid autoregressive factorization. <strong>Intuitively, if model parameters are shared across all factorization orders, in expectation, the model will learn to gather information from all positions on both sides</strong>.</p>
+<p>To formalize the idea, let $\mathcal{Z}_{T}$ be the set of all possible permutations of the length- $T$ index sequence $[1,2, \ldots, T] .$ We use $z_{t}$ and $\mathbf{z}_{&lt;t}$ to denote the $t$ -th element and the first $t-1$ elements of a permutation $\mathbf{z} \in \mathcal{Z}_{T} .$ Then, <strong>our proposed permutation language modeling objective can be expressed as follows</strong>:<br>[<br>\max _{\theta} \quad \mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\sum_{t=1}^{T} \log p_{\theta}\left(x_{z_{t}} | \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\right]<br>]</p>
+<p>Essentially, for a text sequence $\mathbf{x}$, <strong>we sample a factorization order $\mathbf{z}$ at a time</strong> and <strong>decompose the likelihood $p_{\theta}(\mathbf{x})$ according to factorization order</strong>.</p>
+<p>Since <strong>the same model parameter $\theta$ is shared across all factorization orders during training</strong>, in expectation, $x_{t}$ has seen every possible element $x_{i} \neq x_{t}$ in the sequence, hence being able to capture the bidirectional context. Moreover, <strong>as this objective fits into the AR framework, it naturally avoids the independence assumption and the pretrain-finetune discrepancy</strong>.</p>
+<p><strong>Remark on Permutation</strong><br>The proposed objective <strong>only permutes the factorization order</strong>, <strong>not the sequence order</strong>. In other words, <strong>we keep the original sequence order, use the positional encodings corresponding to the original sequence, and rely on a proper attention mask in Transformers to achieve permutation of the factorization order</strong>. Note that this choice is <strong>necessary</strong>, since <strong>the model will only encounter text sequences with the natural order during finetuning</strong>.</p>
+<p>To provide an overall picture, we show an example of predicting the token $x_{3}$ given the same input sequence x but under different factorization orders in the Appendix A.7 with Figure 4.</p>
+<p><img src="https://i.imgur.com/X3EOhew.jpg" alt="fig4"></p>
+<h4 id="Architecture：-Two-Stream-Self-Attention-for-Target-Aware-Representations"><a href="#Architecture：-Two-Stream-Self-Attention-for-Target-Aware-Representations" class="headerlink" title="Architecture： Two-Stream Self-Attention for Target-Aware Representations"></a>Architecture： Two-Stream Self-Attention for Target-Aware Representations</h4><p>While the permutation language modeling objective has desired properties, <strong>naive implementation with standard Transformer parameterization may not work</strong>. To see the problem, assume we parameterize the next-token distribution $p_{\theta}\left(X_{z_{t}} | \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)$ using the standard Softmax formulation, i.e., $p_{\theta}\left(X_{z_{t}}=\right.$ $\left.x | \mathbf{x}_{\mathbf{z}_{&lt;t}}\right)=\frac{\exp \left(e(x)^{\top} h_{\theta}\left(\mathbf{x}_{\mathbf{z&lt;}_{\mathbf{t}}}\right)\right)}{\sum_{x^{\prime}} \exp \left(e\left(x^{\prime}\right)^{\top} h_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}\right)\right)},$ where $h_{\theta}\left(\mathbf{x}_{\mathbf{z}_{\mathbf{&lt;}} t}\right)$ denotes the hidden representation of $\mathbf{x}_{\mathbf{z}&lt;t}$ produced by the shared Transformer network after proper masking.</p>
+<p>Now notice that <strong>the representation $h_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}\right)$ does not depend on which position it will predict, i.e., the value of $z_{t} .$ Consequently, the same distribution is predicted regardless of the target position, which is not able to learn useful representations</strong> (see Appendix A.1 for a concrete example). To avoid this problem, <strong>we propose to re-parameterize the next-token distribution to be target position aware</strong>:<br>[<br>p_{\theta}\left(X_{z_{t}}=x | \mathbf{x}_{z_{&lt;t}}\right)=\frac{\exp \left(e(x)^{\top} g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(e\left(x^{\prime}\right)^{\top} g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\right)}<br>]<br>where <strong>$g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)$ denotes a new type of representations which additionally take the target position $z_{t}$ as input.</strong></p>
+<p><strong>Two-Stream Self-Attention</strong><br>While <strong>the idea of target-aware representations removes the ambiguity in target prediction</strong>, how to formulate $g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)$ remains a non-trivial problem.</p>
+<p>Among other possibilities, <strong>we propose to “stand” at the target position $z_{t}$ and rely on the position $z_{t}$ to gather information from the context $\mathbf{x}_{\mathbf{z}_{&lt;} \text {and }}$ through attention.</strong></p>
+<p>For this parameterization to work, <strong>there are two requirements that are contradictory in a standard Transformer architecture:</strong></p>
+<p>(1) To predict the token $x_{z_{t}}, g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)$ <strong>should only use the position $z_{t}$ and not the content $x_{z_{t}},$</strong> otherwise the objective becomes trivial;</p>
+<p>(2) <strong>To predict the other tokens $x_{z_{j}}$ with $j&gt;t, g_{\theta}\left(\mathbf{x}_{\mathbf{z}&lt;t}, z_{t}\right)$ should also encode the content $x_{z_{t}}$ to provide full contextual information</strong>.</p>
+<p>To resolve such a contradiction, we propose to use two sets of hidden representations instead of one:</p>
+<ul>
+<li><p>The <strong>content representation $h_{\theta}\left(\mathbf{x}_{\mathbf{z}&lt;t}\right),$ or abbreviated as $h_{z_{t}},$</strong> which <strong>serves a similar role to the standard hidden states in Transformer</strong>. This representation <strong>encodes both the context and $x_{z_{t}}$ itself.</strong></p>
+</li>
+<li><p>The <strong>query representation $g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right),$ or abbreviated as $g_{z_{t}},$</strong> which <strong>only has access to the contextual information $\mathbf{x}_{\mathbf{z}&lt;t}$ and the position $z_{t},$ but not the content $x_{z_{t}},$</strong> as discussed above.</p>
+</li>
+</ul>
+<p>Computationally, <strong>the first layer query stream is initialized with a trainable vector, i.e. $g_{i}^{(0)}=w$</strong> while <strong>the content stream is set to the corresponding word embedding, i.e. $h_{i}^{(0)}=e\left(x_{i}\right) .$</strong></p>
+<p>For each self-attention layer $m=1, \ldots, M,$ the two streams of representations are schematically updated with a shared set of parameters as follows (illustrated in Figures 1 (a) and (b)):</p>
+<p><img src="https://i.imgur.com/Fbn5v2s.jpg" alt="fig1"></p>
+<p>$g_{z_{t}}^{(m)} \leftarrow$ Attention $\left(\mathrm{Q}=g_{z_{t}}^{(m-1)}, \mathrm{KV}=\mathbf{h}_{\mathrm{z}&lt;t}^{(m-1)} ; \theta\right), \quad\left(\text { query stream: use } z_{t} \text { but cannot see } x_{z_{t}}\right)$<br>$h_{z_{t}}^{(m)} \leftarrow$ Attention $\left(Q=h_{z_{t}}^{(m-1)}, \mathrm{KV}=\mathbf{h}_{\mathbf{z} \leq t}^{(m-1)} ; \theta\right), \quad\left(\text { content stream: use both } z_{t} \text { and } x_{z_{t}}\right)$</p>
+<p>where $\mathrm{Q}, \mathrm{K}, \mathrm{V}$ denote the query, key, and value in an attention operation. The update rule of the content representations is exactly the same as the standard self-attention, so <strong>during finetuning, we can simply drop the query stream and use the content stream as a normal Transformer(-XL).</strong></p>
+<p>Finally, we can use the last-layer query representation $g_{z_{t}}^{(M)}$ to compute<br>[<br>p_{\theta}\left(X_{z_{t}}=x | \mathbf{x}_{z_{&lt;t}}\right)=\frac{\exp \left(e(x)^{\top} g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\right)}{\sum_{x^{\prime}} \exp \left(e\left(x^{\prime}\right)^{\top} g_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&lt;t}}, z_{t}\right)\right)}<br>]</p>
+<p><strong>Partial Prediction</strong><br>While the permutation language modeling objective has several benefits, it is a much more challenging optimization problem due to the permutation and causes slow convergence in preliminary experiments.</p>
+<p><strong>To reduce the optimization difficulty, we choose to only predict the last tokens in a factorization order.</strong></p>
+<p>Formally, we split z into a non-target subsequence $\mathbf{z}_{&lt;=c}$ and a target subsequence $\mathbf{z}_{&gt;c},$ where $c$ is the cutting point. <strong>The objective is to maximize the log-likelihood of the target subsequence conditioned on the non-target subsequence</strong>, i.e.,<br>[<br>\max _{\theta} \mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\log p_{\theta}\left(\mathbf{x}_{\mathbf{z}_{&gt;c}} | \mathbf{x}_{\mathbf{z}_{\leq c}}\right)\right]=\mathbb{E}_{\mathbf{z} \sim \mathcal{Z}_{T}}\left[\sum_{t=c+1}^{|\mathbf{z}|} \log p_{\theta}\left(x_{z_{t}} | \mathbf{x}_{\mathbf{z}_{<t}}\right)\right]
+\]
+Note that **$\mathbf{z}_{>c}$ is chosen as the target because it possesses the longest context in the sequence given the current factorization order z.**</p>
+<p><strong>A hyperparameter $K$ is used such that about $1 / K$ tokens are selected for predictions</strong>; i.e., $|\mathbf{z}| /(|\mathbf{z}|-c) \approx K .$ <strong>For unselected tokens, their query representations need not be computed, which saves speed and memory.</strong></p>
+<h4 id="Incorporating-Ideas-from-Transformer-XL"><a href="#Incorporating-Ideas-from-Transformer-XL" class="headerlink" title="Incorporating Ideas from Transformer-XL"></a>Incorporating Ideas from Transformer-XL</h4><p>Since our objective function fits in the AR framework, <strong>we incorporate the state-of-the-art AR language model, Transformer-XL , into our pretraining framework</strong>, and name our method after it.</p>
+<p>We <strong>integrate two important techniques in Transformer-XL</strong>, namely <strong>the relative positional encoding scheme and the segment recurrence mechanism</strong>.</p>
+<p>We apply relative positional encodings based on the original sequence as discussed earlier, which is straighforward.</p>
+<p>Now we discuss how to integrate the recurrence mechanism into the proposed permutation setting and enable the model to reuse hidden states from previous segments.</p>
+<p>Without loss of generality, suppose we have two segments taken from a long sequence s; i.e., $\tilde{\mathbf{x}}=\mathbf{s}_{1: T}$ and $\mathbf{x}=\mathbf{s}_{T+1: 2 T} .$ Let $\tilde{\mathbf{z}}$ and $\mathbf{z}$ be permutations of $[1 \cdots T]$ and $[T+1 \cdots 2 T]$ respcetively. Then, based on the permutation $\tilde{\mathbf{z}},$ <strong>we process the first segment, and then cache the obtained content representations $\tilde{\mathrm{h}}^{(m)}$ for each layer $m$.</strong> Then, <strong>for the next segment $\mathrm{x}$, the attention update with memory can be written as<br>[<br>h_{z_{t}}^{(m)} \leftarrow \text { Attention }\left(Q=h_{z_{t}}^{(m-1)}, \mathrm{KV}=\left[\tilde{\mathrm{h}}^{(m-1)}, \mathbf{h}_{\mathrm{z} \leq t}^{(m-1)}\right] ; \theta\right)<br>]</strong></p>
+<p>where <strong>[., .] denotes concatenation along the sequence dimension.</strong></p>
+<p>Notice that <strong>positional encodings only depend on the actual positions in the original sequence.</strong></p>
+<p>Thus, <strong>the above attention update is independent of $\tilde{\mathbf{z}}$ once the representations $\tilde{\mathbf{h}}^{(m)}$ are obtained.</strong></p>
+<p>This <strong>allows caching and reusing the memory without knowing the factorization order of the previous segment</strong>.</p>
+<p>In expectation, the model learns to utilize the memory over all factorization orders of the last segment. The query stream can be computed in the same way. Finally, Figure 1 (c) presents an overview of the proposed permutation language modeling with two-stream attention (see Appendix A.7 for more detailed illustration).</p>
+<h4 id="Modeling-Multiple-Segments"><a href="#Modeling-Multiple-Segments" class="headerlink" title="　Modeling Multiple Segments"></a>　Modeling Multiple Segments</h4><p>Many downstream tasks have multiple input segments, e.g., a question and a context paragraph in question answering.</p>
+<p>We now discuss how we pretrain XLNet to model multiple segments in the autoregressive framework. During the pretraining phase, following BERT, we randomly sample two segments (either from the same context or not) and <strong>treat the concatenation of two segments as one sequence to perform permutation language modeling.</strong></p>
+<p>We only reuse the memory that belongs to the same context. Specifically, the input to our model is the same as BERT: $[\mathrm{CLS}, \mathrm{A}, \mathrm{SEP}, \mathrm{B}, \mathrm{SEP}]$ where “SEP” and “CLS” are two special symbols and “A” and “B” are the two segments. Although　we follow the two-segment data format, <strong>XLNet-Large does not use the objective of next sentence prediction</strong> as it does not show consistent improvement in our ablation study (see Section 3.4).</p>
+<p><strong>Relative Segment Encodings</strong><br>Architecturally, <strong>different from BERT that adds an absolute segment embedding to the word embedding a each position, we extend the idea of relative encodings from Transformer-XL to also encode the segments.</strong></p>
+<p><strong>Given a pair of positions $i$ and $j$ in the sequence, if $i$ and $j$ are from the same segment</strong>, we use a <strong>segment encoding $\mathbf{s}_{i j}=\mathbf{s}_{+}$ or otherwise $\mathbf{s}_{i j}=\mathbf{s}_{-}$ where $s_{+}$ and $s_{-}$ are learnable model parameters for each attention head.</strong></p>
+<p>In other words, <strong>we only consider whether the two positions are within the same segment, as opposed to considering which specific segments they are from.</strong></p>
+<p>This is consistent with the core idea of <strong>relative encodings; i.e., only modeling the relationships between positions.</strong></p>
+<p>When $i$ attends to $j$, the segment encoding $\mathbf{s}_{i j}$ is used to compute an attention weight $a_{i j}=\left(\mathbf{q}_{i}+\mathbf{b}\right)^{\top} \mathbf{s}_{i j},$ where $\mathbf{q}_{i}$ is the query vector as in a standard attention operation and b is a learnable head-specific bias vector. Finally, <strong>the value $a_{i j}$ is added to the normal attention weight.</strong></p>
+<p>There are <strong>two benefits of using relative segment encodings</strong></p>
+<p>First, <strong>the inductive bias of relative encodings improves generalization.</strong></p>
+<p>Second, it opens the possibility of <strong>finetuning on tasks that have more than two input segments, which is not possible using absolute segment encodings.</strong></p>
+<h3 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h3><h4 id="Pretraining-and-Implementation"><a href="#Pretraining-and-Implementation" class="headerlink" title="Pretraining and Implementation"></a>Pretraining and Implementation</h4><p>Following BERT, we use the BooksCorpus and English Wikipedia as part of our pretraining data, which have 13GB plain text combined. In addition, we include Giga5 (16GB text) , ClueWeb 2012-B, and Common Crawl for pretraining. We use heuristics to aggressively filter out short or low-quality articles for ClueWeb 2012-B and Common Crawl, which results in 19GB and 110GB text respectively. After tokenization with SentencePiece, we obtain 2.78B, 1.09B, 4.75B, 4.30B, and 19.97B subword pieces for Wikipedia, BooksCorpus, Giga5, ClueWeb, and Common Crawl respectively, which are <strong>32.89B in total</strong>.</p>
+<p>Our <strong>largest model XLNet-Large has the same architecture hyperparameters as BERT-Large, which results in a similar model size.</strong></p>
+<p><strong>During pretraining, we always use a full sequence length of 512.</strong></p>
+<p>Firstly, to provide a fair comparison with BERT, we also trained XLNet-Large-wikibooks on BooksCorpus and Wikipedia only, where we reuse all pretraining hyper-parameters as in the original BERT. Then, we scale up the training of XLNet-Large by using all the datasets described above.</p>
+<p>Specifically, we train on 512 TPU v3 chips for 500K steps with an Adam weight decay optimizer, linear learning rate decay, and a batch size of 8192, which takes about 5.5 days. It was observed that the model still underfits the data at the end of training.</p>
+<p><strong>Since the recurrence mechanism is introduced, we use a bidirectional data input pipeline where each of the forward and backward directions takes half of the batch size.</strong></p>
+<p>For training XLNet-Large, we set the partial prediction constant K as 6 (see Section 2.3). Our finetuning procedure follows BERT except otherwise specified3 . We employ an idea of span-based prediction, where we first sample a length L ∈ [1, · · · , 5], and then randomly select a consecutive span of L tokens as prediction targets within a context of (KL) tokens.</p>
+<p>We use a variety of natural language understanding datasets to evaluate the performance of our method. Detailed descriptions of the settings for all the datasets can be found in Appendix A.3.</p>
+<p><img src="https://i.imgur.com/qJk2mpP.jpg" alt="fig2"></p>
+<p><img src="https://i.imgur.com/hhNGUMm.jpg" alt="fig3"></p>
+<p><img src="https://i.imgur.com/BywMHTQ.jpg" alt="fig4"></p>
+<p><img src="https://i.imgur.com/u0N5OKj.jpg" alt="fig5"></p>
+<h3 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h3><p>XLNet is a generalized AR pretraining method that uses a permutation language modeling objective to combine the advantages of AR and AE methods. The neural architecture of XLNet is developed to work seamlessly with the AR objective, including integrating Transformer-XL and the careful design of the two-stream attention mechanism. XLNet achieves substantial improvement over previous pretraining objectives on various tasks.</p>
+<p><img src="https://i.imgur.com/UVO8CaU.jpg" alt="fig6"></p>
+<p><img src="https://i.imgur.com/mcL9BmX.jpg" alt="fig7"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:</strong>
+    Vincent Wu
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link:</strong>
+    <a href="http://pleomax0730.github.io/2020/05/28/xlnet/" title="論文閱讀筆記 XLNet： Generalized Autoregressive Pretraining for Language Understanding">http://pleomax0730.github.io/2020/05/28/xlnet/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice: </strong>
+    All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/XLNET/" rel="tag"># XLNET</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/03/roberta/" rel="next" title="論文閱讀筆記 RoBERTa：A Robustly Optimized BERT Pretraining Approach">
+                <i class="fa fa-chevron-left"></i> 論文閱讀筆記 RoBERTa：A Robustly Optimized BERT Pretraining Approach
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.imgur.com/NJyO9ky.jpg"
+                alt="Vincent Wu" />
+            
+              <p class="site-author-name" itemprop="name">Vincent Wu</p>
+              <p class="site-description motion-element" itemprop="description">While not succeed: try()</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Paper"><span class="nav-number">1.</span> <span class="nav-text">Paper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Authors"><span class="nav-number">2.</span> <span class="nav-text">Authors</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-number">2.1.</span> <span class="nav-text">Abstract</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BERT-優點"><span class="nav-number">2.1.1.</span> <span class="nav-text">BERT 優點</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BERT-缺點"><span class="nav-number">2.1.2.</span> <span class="nav-text">BERT 缺點</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Solution-簡述"><span class="nav-number">2.1.3.</span> <span class="nav-text">Solution 簡述</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction"><span class="nav-number">2.2.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AR-和-AE-模型的區別"><span class="nav-number">2.2.1.</span> <span class="nav-text">AR 和 AE 模型的區別</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BERT-問題"><span class="nav-number">2.2.2.</span> <span class="nav-text">BERT 問題</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Solution"><span class="nav-number">2.2.3.</span> <span class="nav-text">Solution</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Proposed-Method"><span class="nav-number">2.3.</span> <span class="nav-text">Proposed Method</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Objectiv：-Permutation-Language-Modeling"><span class="nav-number">2.3.1.</span> <span class="nav-text">Objectiv： Permutation Language Modeling</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Architecture：-Two-Stream-Self-Attention-for-Target-Aware-Representations"><span class="nav-number">2.3.2.</span> <span class="nav-text">Architecture： Two-Stream Self-Attention for Target-Aware Representations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Incorporating-Ideas-from-Transformer-XL"><span class="nav-number">2.3.3.</span> <span class="nav-text">Incorporating Ideas from Transformer-XL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Modeling-Multiple-Segments"><span class="nav-number">2.3.4.</span> <span class="nav-text">　Modeling Multiple Segments</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiments"><span class="nav-number">2.4.</span> <span class="nav-text">Experiments</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Pretraining-and-Implementation"><span class="nav-number">2.4.1.</span> <span class="nav-text">Pretraining and Implementation</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conclusions"><span class="nav-number">2.5.</span> <span class="nav-text">Conclusions</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vincent Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://pleomax0730.github.io/2020/05/28/xlnet/';
+          this.page.identifier = '2020/05/28/xlnet/';
+          this.page.title = '論文閱讀筆記 XLNet： Generalized Autoregressive Pretraining for Language Understanding';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://vincentwu.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
