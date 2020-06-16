@@ -254,6 +254,175 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pleomax0730.github.io/2020/06/16/distilbert/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Wu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.imgur.com/NJyO9ky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="論文閱讀筆記">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/16/distilbert/" itemprop="url">論文閱讀筆記 DistilBERT： a distilled version of BERT - smaller, faster, cheaper and lighter</a></h1>
+        
+
+        <div class="post-meta">
+          
+            <i class="fa fa-thumb-tack"></i>
+            <font color="RED">置顶</font>
+            <span class="post-meta-divider">|</span>
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-16T21:12:35+08:00">
+                2020-06-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-06-16T21:12:35+08:00">
+                2020-06-16
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computation-and-Language/" itemprop="url" rel="index">
+                    <span itemprop="name">Computation and Language</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="Paper"><a href="#Paper" class="headerlink" title="Paper"></a>Paper</h3><p><a href="https://arxiv.org/abs/1910.01108v4" target="_blank" rel="noopener">https://arxiv.org/abs/1910.01108v4</a></p>
+<h3 id="Authors"><a href="#Authors" class="headerlink" title="Authors"></a>Authors</h3><p>Victor SANH, Lysandre DEBUT, Julien CHAUMOND, Thomas WOLF</p>
+<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><h4 id="當前-NLP-領域，Transfer-Learning-的問題"><a href="#當前-NLP-領域，Transfer-Learning-的問題" class="headerlink" title="當前 NLP 領域，Transfer Learning 的問題"></a>當前 NLP 領域，Transfer Learning 的問題</h4><p>As Transfer Learning from large-scale pre-trained models becomes more prevalent in Natural Language Processing (NLP), <strong>operating these large models in on-the-edge and/or under constrained computational training or inference budgets remains challenging.</strong></p>
+<h4 id="Solution-簡述"><a href="#Solution-簡述" class="headerlink" title="Solution 簡述"></a>Solution 簡述</h4><p>We propose a method to pre-train a smaller general purpose language representation model, called <strong>DistilBERT</strong>, which can then be finetuned with good performances on a wide range of tasks like its larger counterparts.</p>
+<p>We <strong>leverage knowledge distillation during the pre-training phase</strong> and show that it is possible to <strong>reduce the size of a BERT model by 40%</strong>, while <strong>retaining 97% of its language understanding capabilities and being 60% faster.</strong></p>
+<p>To leverage the inductive biases learned by larger models during pre-training, <strong>we introduce a triple loss combining language modeling, distillation and cosine-distance losses.</strong><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/06/16/distilbert/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://pleomax0730.github.io/2020/05/28/xlnet/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -277,10 +446,6 @@
         
 
         <div class="post-meta">
-          
-            <i class="fa fa-thumb-tack"></i>
-            <font color="RED">置顶</font>
-            <span class="post-meta-divider">|</span>
           
 
           <span class="post-time">
@@ -1445,7 +1610,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1467,7 +1632,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
