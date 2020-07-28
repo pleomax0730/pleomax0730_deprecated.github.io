@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Transformer," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Paper： https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1706.03762v5Authors： Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia PolosukhinAbstract當前 NLP seq2seq model 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="論文閱讀筆記 Attention Is All You Need">
+<meta property="og:url" content="http://pleomax0730.github.io/2020/07/28/transformer/index.html">
+<meta property="og:site_name" content="論文閱讀筆記">
+<meta property="og:description" content="Paper： https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1706.03762v5Authors： Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia PolosukhinAbstract當前 NLP seq2seq model 的">
+<meta property="og:image" content="https://i.imgur.com/l8un4tI.jpg">
+<meta property="og:image" content="https://i.imgur.com/w9Nxqgg.jpg">
+<meta property="og:image" content="https://i.imgur.com/OANStI6.jpg">
+<meta property="article:published_time" content="2020-07-28T06:41:02.000Z">
+<meta property="article:modified_time" content="2020-07-28T06:41:02.000Z">
+<meta property="article:author" content="Vincent Wu">
+<meta property="article:tag" content="Transformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/l8un4tI.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://pleomax0730.github.io/2020/07/28/transformer/"/>
+
+
+
+
+
+  <title>論文閱讀筆記 Attention Is All You Need | 論文閱讀筆記</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">論文閱讀筆記</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://pleomax0730.github.io/2020/07/28/transformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Wu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.imgur.com/NJyO9ky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="論文閱讀筆記">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">論文閱讀筆記 Attention Is All You Need</h1>
+        
+
+        <div class="post-meta">
+          
+
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-28T14:41:02+08:00">
+                2020-07-28
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Post modified&#58;</span>
+              
+              <time title="Post modified" itemprop="dateModified" datetime="2020-07-28T14:41:02+08:00">
+                2020-07-28
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computation-and-Language/" itemprop="url" rel="index">
+                    <span itemprop="name">Computation and Language</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Paper：-https-arxiv-org-abs-1706-03762v5"><a href="#Paper：-https-arxiv-org-abs-1706-03762v5" class="headerlink" title="Paper： https://arxiv.org/abs/1706.03762v5"></a>Paper： <a href="https://arxiv.org/abs/1706.03762v5" target="_blank" rel="noopener">https://arxiv.org/abs/1706.03762v5</a></h2><h2 id="Authors：-Ashish-Vaswani-Noam-Shazeer-Niki-Parmar-Jakob-Uszkoreit-Llion-Jones-Aidan-N-Gomez-Lukasz-Kaiser-Illia-Polosukhin"><a href="#Authors：-Ashish-Vaswani-Noam-Shazeer-Niki-Parmar-Jakob-Uszkoreit-Llion-Jones-Aidan-N-Gomez-Lukasz-Kaiser-Illia-Polosukhin" class="headerlink" title="Authors： Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin"></a>Authors： Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><h4 id="當前-NLP-seq2seq-model-的問題"><a href="#當前-NLP-seq2seq-model-的問題" class="headerlink" title="當前 NLP seq2seq model 的問題"></a>當前 NLP seq2seq model 的問題</h4><p>The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism.</p>
+<h4 id="Solution-簡述"><a href="#Solution-簡述" class="headerlink" title="Solution 簡述"></a>Solution 簡述</h4><p>We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.<br><a id="more"></a></p>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>Attention mechanisms have become an integral part of compelling sequence modeling and transduction models in various tasks, allowing modeling of dependencies without regard to their distance in the input or output sequences [2, 19]. In all but a few cases [27], however, such attention mechanisms are used in conjunction with a recurrent network.</p>
+<p>In this work we propose the Transformer, a model architecture eschewing recurrence and instead relying entirely on an attention mechanism to draw global dependencies between input and output. The Transformer allows for significantly more parallelization and can reach a new state of the art in translation quality after being trained for as little as twelve hours on eight P100 GPUs.</p>
+<h3 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h3><p>The Transformer follows this overall architecture using stacked self-attention and point-wise, fully connected layers for both the encoder and decoder, shown in the left and right halves of Figure 1, respectively.</p>
+<p><img src="https://i.imgur.com/l8un4tI.jpg" alt="fig1"></p>
+<h4 id="Encoder-and-Decoder-Stacks"><a href="#Encoder-and-Decoder-Stacks" class="headerlink" title="Encoder and Decoder Stacks"></a>Encoder and Decoder Stacks</h4><p><strong>Encoder:</strong> The encoder is composed of a stack of <strong>$N=6$ identical layers</strong>. Each layer has <strong>two sub-layers</strong>.</p>
+<ol>
+<li><p>The first is a multi-head self-attention mechanism</p>
+</li>
+<li><p>The second is a simple, positionwise fully connected feed-forward network.</p>
+</li>
+</ol>
+<p>We employ a residual connection [11] around each of the two sub-layers, followed by layer normalization [1]. That is, the output of each sub-layer is LayerNorm $(x+\text { Sublayer }(x)),$ where Sublayer $(x)$ is the function implemented by the sub-layer itself. <strong>To facilitate these residual connections, all sub-layers in the model, as well as the embedding layers, produce outputs of dimension $d_{\text {model }}=512$.</strong></p>
+<p><strong>Decoder:</strong> The decoder is also composed of a stack of <strong>$N=6$ identical layers</strong>. In addition to the two sub-layers in each encoder layer, <strong>the decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack</strong>.</p>
+<p>Similar to the encoder, we employ residual connections around each of the sub-layers, followed by layer normalization. <strong>We also modify the self-attention sub-layer in the decoder stack to prevent positions from attending to subsequent positions</strong>. This masking, combined with fact that the output embeddings are offset by one position, ensures that <strong>the predictions for position $i$ can depend only on the known outputs at positions less than $i$</strong>.</p>
+<h4 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h4><p>An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.</p>
+<h5 id="Scaled-Dot-Product-Attention"><a href="#Scaled-Dot-Product-Attention" class="headerlink" title="Scaled Dot-Product Attention"></a>Scaled Dot-Product Attention</h5><p><img src="https://i.imgur.com/w9Nxqgg.jpg" alt="fig2"></p>
+<p>We call our particular attention “Scaled Dot-Product Attention” (Figure 2). The input consists of queries and keys of dimension $d_{k},$ and values of dimension $d_{v} .$ We compute the dot products of the query with all keys, divide each by $\sqrt{d_{k}}$, and apply a softmax function to obtain the weights on the values.</p>
+<p>In practice, we compute the attention function on a set of queries simultaneously, packed together into a matrix $Q$. The keys and values are also packed together into matrices $K$ and $V$. We compute the matrix of outputs as:<br>[<br>\text { Attention }(Q, K, V)=\operatorname{softmax}\left(\frac{Q K^{T}}{\sqrt{d_{k}}}\right) V<br>]<br>The two most commonly used attention functions are additive attention [2], and dot-product (multiplicative) attention. <strong>Dot-product attention is identical to our algorithm, except for the scaling factor of $\frac{1}{\sqrt{d_{k}}} .$</strong> Additive attention computes the compatibility function using a feed-forward network with a single hidden layer.</p>
+<p><strong>While the two are similar in theoretical complexity, dot-product attention is much faster and more space-efficient in practice, since it can be implemented using highly optimized matrix multiplication code</strong>.</p>
+<p>While for small values of $d_{k}$ the two mechanisms perform similarly, additive attention outperforms dot product attention without scaling for larger values of $d_{k}$ [3]. <strong>We suspect that for large values of $d_{k},$ the dot products grow large in magnitude, pushing the softmax function into regions where it has extremely small gradients ${ }^{4} .$ To counteract this effect, we scale the dot products by $\frac{1}{\sqrt{d_{k}}}$</strong>.</p>
+<h5 id="Multi-Head-Attention"><a href="#Multi-Head-Attention" class="headerlink" title="Multi-Head Attention"></a>Multi-Head Attention</h5><p>Instead of performing a single attention function with $d_{\text {model }}$ -dimensional keys, values and queries, <strong>we found it beneficial to linearly project the queries, keys and values $h$ times with different, learned linear projections to $d_{k}, d_{k}$ and $d_{v}$ dimensions, respectively</strong>.</p>
+<p>On each of these projected versions of queries, keys and values we then perform the attention function in parallel, yielding $d_{v}$ -dimensional output values. These are concatenated and once again projected, resulting in the final values, as depicted in Figure 2.</p>
+<p><strong>Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions</strong>. With a single attention head, averaging inhibits this.<br>[<br>\begin{aligned}<br>\operatorname{MultiHead}(Q, K, V) &amp;=\operatorname{Concat}\left(\operatorname{head}_{1}, \ldots, \mathrm{head}_{\mathrm{h}}\right) W^{O} \\<br>\text { where head }_{\mathrm{i}} &amp;=\text { Attention }\left(Q W_{i}^{Q}, K W_{i}^{K}, V W_{i}^{V}\right)<br>\end{aligned}<br>]<br>Where the projections are parameter matrices $W_{i}^{Q} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{K} \in \mathbb{R}^{d_{\text {model }} \times d_{k}}, W_{i}^{V} \in \mathbb{R}^{d_{\text {model }} \times d_{v}}$ and $W^{O} \in \mathbb{R}^{h d_{v} \times d_{\text {model }}}$.</p>
+<p>In this work, <strong>we employ $h=8$ parallel attention layers, or heads. For each of these we use $d_{k}=d_{v}=d_{\text {model }} / h=64 .$</strong> Due to the reduced dimension of each head, the total computational cost is similar to that of single-head attention with full dimensionality.</p>
+<h5 id="Applications-of-Attention-in-our-Model"><a href="#Applications-of-Attention-in-our-Model" class="headerlink" title="Applications of Attention in our Model"></a>Applications of Attention in our Model</h5><p>The Transformer uses multi-head attention in three different ways:</p>
+<ol>
+<li><p>In “encoder-decoder attention” layers, <strong>the queries come from the previous decoder layer, and the memory keys and values come from the output of the encoder</strong>. This allows every position in the decoder to attend over all positions in the input sequence. This mimics the typical encoder-decoder attention mechanisms in sequence-to-sequence models such as [38,2,9]</p>
+</li>
+<li><p>The <strong>encoder</strong> contains self-attention layers. In a <strong>self-attention layer all of the keys, values and queries come from the same place</strong>, in this case, the output of the previous layer in the encoder. Each position in the encoder can attend to all positions in the previous layer of the encoder.</p>
+</li>
+<li><p>Similarly, self-attention layers in the decoder allow each position in the decoder to attend to all positions in the decoder up to and including that position. We need to prevent leftward information flow in the decoder to preserve the auto-regressive property. <strong>We implement this inside of scaled dot-product attention by masking out (setting to $-\infty$ ) all values in the input of the softmax which correspond to illegal connections</strong>. See Figure 2 .</p>
+</li>
+</ol>
+<h4 id="Position-wise-Feed-Forward-Networks"><a href="#Position-wise-Feed-Forward-Networks" class="headerlink" title="Position-wise Feed-Forward Networks"></a>Position-wise Feed-Forward Networks</h4><p>In addition to attention sub-layers, each of the layers in our encoder and decoder contains a fully connected feed-forward network, which is applied to each position separately and identically. This <strong>consists of two linear transformations with a ReLU activation in between</strong>.<br>[<br>\operatorname{FFN}(x)=\max \left(0, x W_{1}+b_{1}\right) W_{2}+b_{2}<br>]<br>While the linear transformations are the same across different positions, they use different parameters from layer to layer. Another way of describing this is as two convolutions with kernel size $1 .$ <strong>The dimensionality of input and output is $d_{\text {model }}=512,$ and the inner-layer has dimensionality $d_{f f}=2048$</strong>.</p>
+<h3 id="Embeddings-and-Softmax"><a href="#Embeddings-and-Softmax" class="headerlink" title="Embeddings and Softmax"></a>Embeddings and Softmax</h3><p>Similarly to other sequence transduction models, we use learned embeddings to convert the input tokens and output tokens to vectors of dimension $d_{\text {model. }}$ We also use the usual learned linear transformation and softmax function to convert the decoder output to predicted next-token probabilities. <strong>In our model, we share the same weight matrix between the two embedding layers and the pre-softmax linear transformation, similar to [30]. In the embedding layers, we multiply those weights by $\sqrt{d_{\text {model }}}$</strong>.</p>
+<h3 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h3><p>Since our model contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, we must inject some information about the relative or absolute position of the tokens in the sequence.</p>
+<p>To this end, <strong>we add “positional encodings” to the input embeddings at the bottoms of the encoder and decoder stacks</strong>. The positional encodings have the same dimension d_model as the embeddings, so that the two can be summed. <strong>There are many choices of positional encodings, learned and fixed [9]</strong>.</p>
+<p>In this work, we use sine and cosine functions of different frequencies:<br>[<br>\begin{aligned}<br>P E_{(p o s, 2 i)} &amp;=\sin \left(p o s / 10000^{2 i / d_{\text {model }}}\right) \\<br>P E_{(p o s, 2 i+1)} &amp;=\cos \left(p o s / 10000^{2 i / d_{\text {model }}}\right)<br>\end{aligned}<br>]<br>where <strong>pos is the position and $i$ is the dimension</strong>. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from $2 \pi$ to $10000 \cdot 2 \pi .$ <strong>We chose this function because we hypothesized it would allow the model to easily learn to attend by relative positions, since for any fixed offset $k, P E_{p o s+k}$ can be represented as a linear function of $P E_{p o s}$</strong>.</p>
+<p><strong>We also experimented with using learned positional embeddings [9] instead, and found that the two versions produced nearly identical results (see Table 3 row $(\mathrm{E})$ )</strong>.</p>
+<p>We chose the sinusoidal version because it may allow the model to extrapolate to sequence lengths longer than the ones encountered during training.</p>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><h4 id="Training-Data-and-Batching"><a href="#Training-Data-and-Batching" class="headerlink" title="Training Data and Batching"></a>Training Data and Batching</h4><p>We trained on the standard <strong>WMT 2014 English-German dataset</strong> consisting of about 4.5 million sentence pairs. <strong>Sentences were encoded using byte-pair encoding [3], which has a shared source target vocabulary of about 37000 tokens</strong>.</p>
+<p>For English-French, we used the significantly larger <strong>WMT 2014 English-French dataset</strong> consisting of 36M sentences and <strong>split tokens into a 32000 word-piece vocabulary [38]</strong>. Sentence pairs were batched together by approximate sequence length. Each training batch contained a set of sentence pairs containing approximately 25000 source tokens and 25000 target tokens.</p>
+<h4 id="Hardware-and-Schedule"><a href="#Hardware-and-Schedule" class="headerlink" title="Hardware and Schedule"></a>Hardware and Schedule</h4><p>We trained our models on one machine with 8 NVIDIA P100 GPUs. For our base models using the hyperparameters described throughout the paper, each training step took about 0.4 seconds. <strong>We trained the base models for a total of 100,000 steps or 12 hours. For our big models,(described on the bottom line of table 3), step time was 1.0 seconds. The big models were trained for 300,000 steps (3.5 days)</strong>.</p>
+<h4 id="Optimizer"><a href="#Optimizer" class="headerlink" title="Optimizer"></a>Optimizer</h4><p>We used the Adam optimizer [20] with $\beta_{1}=0.9, \beta_{2}=0.98$ and $\epsilon=10^{-9}$. We varied the learning rate over the course of training, according to the formula:<br>[<br>\text {lrate}=d_{\text {model }}^{-0.5} \cdot \min \left(\text {step}_{-} \text {num}^{-0.5}, \text {step}_{\text {- }} \text { num } \cdot \text { warmup }_{-} \text {steps }^{-1.5}\right)<br>]<br>This corresponds to <strong>increasing the learning rate linearly for the first warmup_steps training steps, and decreasing it thereafter proportionally to the inverse square root of the step number</strong>. We used warmup$_{-}$steps$=4000$</p>
+<h3 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h3><h4 id="Model-Variations"><a href="#Model-Variations" class="headerlink" title="Model Variations"></a>Model Variations</h4><p>To evaluate the importance of different components of the Transformer, we varied our base model in different ways, measuring the change in performance on English-to-German translation on the development set, newstest2013. We used beam search as described in the Machine Translation section, but no checkpoint averaging. We present these results in Table $3 .$</p>
+<p>In Table 3 rows $(\mathrm{A})$, <strong>we vary the number of attention heads and the attention key and value dimensions, keeping the amount of computation constant</strong>, as described in Section $3.2 .2 .$</p>
+<p>While single-head attention is 0.9 BLEU worse than the best setting, quality also drops off with too many heads.</p>
+<p><img src="https://i.imgur.com/OANStI6.jpg" alt="tab3"></p>
+<p>In Table 3 rows $(B),$ we observe that reducing the attention key size $d_{k}$ hurts model quality. This suggests that determining compatibility is not easy and that a more sophisticated compatibility function than dot product may be beneficial. </p>
+<p>We further observe in rows (C) and (D) that, as expected, bigger models are better, and dropout is very helpful in avoiding over-fitting. In row (E) we replace our sinusoidal positional encoding with learned positional embeddings [9], and observe nearly identical results to the base model.</p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>In this work, we presented the Transformer, the first sequence transduction model based entirely on attention, replacing the recurrent layers most commonly used in encoder-decoder architectures with multi-headed self-attention.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:</strong>
+    Vincent Wu
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link:</strong>
+    <a href="http://pleomax0730.github.io/2020/07/28/transformer/" title="論文閱讀筆記 Attention Is All You Need">http://pleomax0730.github.io/2020/07/28/transformer/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice: </strong>
+    All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/16/distilbert/" rel="next" title="論文閱讀筆記 DistilBERT： a distilled version of BERT - smaller, faster, cheaper and lighter">
+                <i class="fa fa-chevron-left"></i> 論文閱讀筆記 DistilBERT： a distilled version of BERT - smaller, faster, cheaper and lighter
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://i.imgur.com/NJyO9ky.jpg"
+                alt="Vincent Wu" />
+            
+              <p class="site-author-name" itemprop="name">Vincent Wu</p>
+              <p class="site-description motion-element" itemprop="description">While not succeed: try()</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Paper：-https-arxiv-org-abs-1706-03762v5"><span class="nav-number">1.</span> <span class="nav-text">Paper： https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1706.03762v5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Authors：-Ashish-Vaswani-Noam-Shazeer-Niki-Parmar-Jakob-Uszkoreit-Llion-Jones-Aidan-N-Gomez-Lukasz-Kaiser-Illia-Polosukhin"><span class="nav-number">2.</span> <span class="nav-text">Authors： Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract"><span class="nav-number">2.1.</span> <span class="nav-text">Abstract</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#當前-NLP-seq2seq-model-的問題"><span class="nav-number">2.1.1.</span> <span class="nav-text">當前 NLP seq2seq model 的問題</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Solution-簡述"><span class="nav-number">2.1.2.</span> <span class="nav-text">Solution 簡述</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction"><span class="nav-number">2.2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Architecture"><span class="nav-number">2.3.</span> <span class="nav-text">Model Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Encoder-and-Decoder-Stacks"><span class="nav-number">2.3.1.</span> <span class="nav-text">Encoder and Decoder Stacks</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Attention"><span class="nav-number">2.3.2.</span> <span class="nav-text">Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Scaled-Dot-Product-Attention"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">Scaled Dot-Product Attention</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Multi-Head-Attention"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">Multi-Head Attention</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Applications-of-Attention-in-our-Model"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">Applications of Attention in our Model</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Position-wise-Feed-Forward-Networks"><span class="nav-number">2.3.3.</span> <span class="nav-text">Position-wise Feed-Forward Networks</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Embeddings-and-Softmax"><span class="nav-number">2.4.</span> <span class="nav-text">Embeddings and Softmax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Positional-Encoding"><span class="nav-number">2.5.</span> <span class="nav-text">Positional Encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training"><span class="nav-number">2.6.</span> <span class="nav-text">Training</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Training-Data-and-Batching"><span class="nav-number">2.6.1.</span> <span class="nav-text">Training Data and Batching</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hardware-and-Schedule"><span class="nav-number">2.6.2.</span> <span class="nav-text">Hardware and Schedule</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Optimizer"><span class="nav-number">2.6.3.</span> <span class="nav-text">Optimizer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Results"><span class="nav-number">2.7.</span> <span class="nav-text">Results</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Model-Variations"><span class="nav-number">2.7.1.</span> <span class="nav-text">Model Variations</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.8.</span> <span class="nav-text">Conclusion</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vincent Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://pleomax0730.github.io/2020/07/28/transformer/';
+          this.page.identifier = '2020/07/28/transformer/';
+          this.page.title = '論文閱讀筆記 Attention Is All You Need';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://vincentwu.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
